@@ -14,7 +14,7 @@ class Solution:
         r = l
 
         if there is letter in window with count > s1 count
-        we need to shift left pointer until this letter window count
+        we need to shift left pointer while this letter window count
         is greater than s1 count
 
         if window length == s1 length return True
