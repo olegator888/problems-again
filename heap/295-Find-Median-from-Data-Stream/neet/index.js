@@ -58,4 +58,41 @@ class Heap {
   get size() {
     return this.heap.length;
   }
+
+  get top() {
+    return this.heap[0];
+  }
 }
+
+var MedianFinder = function () {
+  this.left = new Heap({ ev: (val) => -1 * val });
+  this.right = new Heap();
+};
+
+/**
+ * @param {number} num
+ * @return {void}
+ */
+MedianFinder.prototype.addNum = function (num) {
+  this.left.push(num);
+
+  if (this.left.top > this.right.top || this.left.size - this.right.size > 1) {
+    this.right.push(this.left.pop());
+  }
+  if (this.right.size - this.left.size > 1) {
+    this.left.push(this.right.pop());
+  }
+};
+
+/**
+ * @return {number}
+ */
+MedianFinder.prototype.findMedian = function () {
+  if (this.left.size > this.right.size) {
+    return this.left.heap[0];
+  }
+  if (this.right.size > this.left.size) {
+    return this.right.heap[0];
+  }
+  return (this.left.heap[0] + this.right.heap[0]) / 2;
+};
