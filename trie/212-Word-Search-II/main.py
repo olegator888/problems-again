@@ -1,6 +1,8 @@
+# sam
+
 class Node:
-    def __init__(self, isEnd=False):
-        self.isEnd = isEnd
+    def __init__(self):
+        self.end = False
         self.children = {}
 
 class Trie:
@@ -9,14 +11,11 @@ class Trie:
 
     def insert(self, word: str) -> None:
         cur = self.trie
-        i = 0
-        while i < len(word):
-            if word[i] not in cur.children:
-                cur.children[word[i]] = Node(i == len(word) - 1)
-            cur = cur.children[word[i]]    
-            if i == len(word) - 1:
-                cur.isEnd = True
-            i += 1    
+        for c in word:
+            if c not in cur.children:
+                cur.children[c] = Node()
+            cur = cur.children[c]    
+        cur.end = True   
 
 class Solution:
     def findWords(self, board, words):
@@ -26,21 +25,22 @@ class Solution:
             trie.insert(w)
           
         directions = [(-1, 0), (0, -1), (1, 0), (0, 1)]  
-        res = []    
+        res = set()
+        visit = set()
 
-        def dfs(r, c, cur, curWord=""):    
-            if r < 0 or r == rows or c < 0 or c == cols or board[r][c] not in cur.children:
-                return
+        def dfs(r, c, cur, curWord):    
             if cur.end:
-                res.append(curWord)
-                return
+                res.add(curWord)
+            if r < 0 or r == rows or c < 0 or c == cols or board[r][c] not in cur.children or (r, c) in visit:
+                return 
+            visit.add((r, c))                   
             for dr, dc in directions:
                 dfs(r + dr, c + dc, cur.children[board[r][c]], curWord + board[r][c])
+            visit.remove((r, c))       
 
         for r in range(rows):
             for c in range(cols):
-                trie_copy = trie.trie
-                dfs(r, c, trie_copy)
+                dfs(r, c, trie.trie, "")
 
-        return res
+        return list(res)
         
