@@ -1,19 +1,18 @@
+# sam
+
 class Solution:
     def pacificAtlantic(self, heights):
         rows, cols = len(heights), len(heights[0])
         pacific, atlantic = set(), set()
         res = []
         directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
-        visit = set()
 
-        def dfs(r, c, prev, coords):
+        def dfs(r, c, prev, visit):
             if r < 0 or c < 0 or r == rows or c == cols or (r, c) in visit or heights[r][c] < prev:
                 return
-            coords.add((r, c))
             visit.add((r, c))
             for dr, dc in directions:
-                dfs(r + dr, c + dc, heights[r][c], coords)
-            visit.remove((r, c))
+                dfs(r + dr, c + dc, heights[r][c], visit)
 
         # top bottom
         for c in range(cols):
