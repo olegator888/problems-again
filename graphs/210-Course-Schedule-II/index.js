@@ -4,63 +4,40 @@
  * @return {number[]}
  */
 var findOrder = function (numCourses, prerequisites) {
-  /**
-   we have to use bfs here
-   of all the keys we need to find key that has no edges to it - it will be our start
-   from there start traversing
-   */
-
-  const order = [];
-
   const graph = {};
 
+  for (let i = 0; i < numCourses; i++) {
+    graph[i] = [];
+  }
+
   for (const [crs, pre] of prerequisites) {
-    if (!graph[crs]) graph[crs] = [];
     graph[crs].push(pre);
   }
 
-  let start = null;
-  for (const pre in graph) {
-    if (graph[pre].length === 0) {
-      start = pre;
-      break;
-    }
-  }
-
-  const q = [3];
   const visit = new Set();
+  const path = new Set();
+  const order = [];
 
-  while (q.length > 0) {
-    const node = q.shift();
-
-    if (visit.has(node)) return [];
-
-    order.push(node);
+  const top_sort = (node) => {
+    if (path.has(node)) return false;
+    if (visit.has(node)) return true;
     visit.add(node);
-
-    if (graph[node]) {
-      for (const crs of graph[node]) {
-        if (!q.includes(crs)) {
-          q.push(crs);
-        }
+    path.add(node);
+    for (const child of graph[node]) {
+      if (!top_sort(child)) {
+        return false;
       }
     }
-  }
+    path.delete(node);
+    order.push(node);
+    return true;
+  };
 
   for (let i = 0; i < numCourses; i++) {
-    if (!order.includes(i)) {
-      order.push(i);
+    if (!top_sort(i)) {
+      return [];
     }
   }
 
-  return order.reverse();
+  return order;
 };
-
-console.log(
-  findOrder(4, [
-    [1, 0],
-    [2, 0],
-    [3, 1],
-    [3, 2],
-  ])
-);
