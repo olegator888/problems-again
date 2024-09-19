@@ -1,5 +1,3 @@
-// total sam
-
 var findMinDifference = function (timePoints) {
   const toMinutes = (time) => {
     const [hours, minutes] = time.split(":").map(Number);

@@ -1,5 +1,3 @@
-# total sam
-
 class Solution:
     def findMinDifference(self, timePoints) -> int:
         timePoints.sort()
